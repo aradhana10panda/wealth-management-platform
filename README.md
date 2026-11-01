@@ -1,6 +1,7 @@
 # Wealth Management Platform
 
-A multi-module Spring Boot backend for a wealth management platform with separate service boundaries for authentication, wealth domain logic, and AI advisory capabilities.
+A multi-module Spring Boot backend for a wealth management platform with separate service boundaries for authentication,
+wealth domain logic, and AI advisory capabilities.
 
 ## Tech stack
 
@@ -68,6 +69,27 @@ The auth service now includes:
 - Spring Security configuration
 - registration, login, refresh, and user profile endpoints
 
+## Phase 3 started
+
+The wealth service now includes a first domain model for financial planning:
+
+- investment goals with target amount, risk profile, and status tracking
+- portfolios with asset allocation fields
+- holdings with security-level metadata
+- Flyway migration and repository layer
+- controller endpoints for goals, portfolios, and holdings
+
+Example endpoints:
+
+- POST /api/v1/goals
+- GET /api/v1/goals?userId={uuid}
+- POST /api/v1/portfolios
+- GET /api/v1/portfolios?userId={uuid}
+- POST /api/v1/portfolios/{portfolioId}/holdings
+- GET /api/v1/portfolios/{portfolioId}/holdings
+
 ## Notes
 
-This repo is set up for local development. Docker is required for the Postgres/Redis/Kafka containers, and the current CLI environment here does not include Docker support, so those runtime checks must be executed on a machine with Docker installed.
+This repo is set up for local development. Docker is required for the Postgres/Redis/Kafka containers, and the current
+CLI environment here does not include Docker support, so those runtime checks must be executed on a machine with Docker
+installed.
