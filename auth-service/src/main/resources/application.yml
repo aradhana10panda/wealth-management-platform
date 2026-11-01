@@ -17,7 +17,7 @@ spring:
 
 app:
   auth:
-    jwt-secret: ${JWT_SECRET}
+    jwt-secret: ${JWT_SECRET:d2VhbHRoLXBsYXRmb3JtLWxvY2FsLWRldi1zZWNyZXQtMzItYnl0ZXMh}
     access-token-ttl: ${ACCESS_TOKEN_TTL:PT15M}
     refresh-token-ttl: ${REFRESH_TOKEN_TTL:P7D}
 
