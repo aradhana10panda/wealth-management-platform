@@ -1,7 +1,7 @@
 package com.wealthplatform.auth.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wealthplatform.auth.security.JwtAuthenticationFilter;
+import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
