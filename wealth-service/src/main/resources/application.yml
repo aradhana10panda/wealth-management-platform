@@ -12,6 +12,8 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: none
+  flyway:
+    enabled: true
   data:
     redis:
       host: ${REDIS_HOST:localhost}
