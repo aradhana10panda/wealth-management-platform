@@ -13,29 +13,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 public class AuthController {
-    private final AuthService authService;
+  private final AuthService authService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
+  public AuthController(AuthService authService) {
+    this.authService = authService;
+  }
 
-    @PostMapping("/auth/register")
-    public AuthResponses.Tokens register(@Valid @RequestBody AuthRequests.Register request) {
-        return authService.register(request);
-    }
+  @PostMapping("/auth/register")
+  public AuthResponses.Tokens register(@Valid @RequestBody AuthRequests.Register request) {
+    return authService.register(request);
+  }
 
-    @PostMapping("/auth/login")
-    public AuthResponses.Tokens login(@Valid @RequestBody AuthRequests.Login request) {
-        return authService.login(request);
-    }
+  @PostMapping("/auth/login")
+  public AuthResponses.Tokens login(@Valid @RequestBody AuthRequests.Login request) {
+    return authService.login(request);
+  }
 
-    @PostMapping("/auth/refresh")
-    public AuthResponses.Tokens refresh(@Valid @RequestBody AuthRequests.Refresh request) {
-        return authService.refresh(request.refreshToken());
-    }
+  @PostMapping("/auth/refresh")
+  public AuthResponses.Tokens refresh(@Valid @RequestBody AuthRequests.Refresh request) {
+    return authService.refresh(request.refreshToken());
+  }
 
-    @GetMapping("/users/me")
-    public AuthResponses.UserProfile me(@AuthenticationPrincipal AuthenticatedUser user) {
-        return authService.currentUser(user.id());
-    }
+  @GetMapping("/users/me")
+  public AuthResponses.UserProfile me(@AuthenticationPrincipal AuthenticatedUser user) {
+    return authService.currentUser(user.id());
+  }
 }
