@@ -1,13 +1,12 @@
 package com.wealthplatform.auth.repository;
 
 import com.wealthplatform.auth.domain.AppUser;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AppUserRepository extends JpaRepository<AppUser, UUID> {
-    Optional<AppUser> findByEmail(String email);
+  Optional<AppUser> findByEmail(String email);
 
-    boolean existsByEmail(String email);
+  boolean existsByEmail(String email);
 }

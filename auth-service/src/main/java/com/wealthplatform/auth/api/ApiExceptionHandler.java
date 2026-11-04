@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
-    private static ResponseEntity<ApiError> error(
+  private static ResponseEntity<ApiError> error(
             HttpStatus status,
             String message,
             Map<String, String> fieldErrors
@@ -27,35 +27,37 @@ public class ApiExceptionHandler {
                 message,
                 fieldErrors
         ));
-    }
+    }@ExceptionHandler(AuthException.class)
+  ResponseEntity<ApiError> handleAuthException(AuthException exception) {
+    return error(exception.getStatus(), exception.getMessage(), Map.of());
+  }
 
-    @ExceptionHandler(AuthException.class)
-    ResponseEntity<ApiError> handleAuthException(AuthException exception) {
-        return error(exception.getStatus(), exception.getMessage(), Map.of());
-    }
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException exception) {
+    Map<String, String> fieldErrors =
+        exception.getBindingResult().getFieldErrors().stream()
+            .collect(
+                Collectors.toMap(
+                    FieldError::getField,
+                    fieldError ->
+                        fieldError.getDefaultMessage() == null
+                            ? "Invalid value"
+                            : fieldError.getDefaultMessage(),
+                    (first, second) -> first));
+    return error(HttpStatus.BAD_REQUEST, "Request validation failed", fieldErrors);
+  }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException exception) {
-        Map<String, String> fieldErrors = exception.getBindingResult().getFieldErrors().stream()
-                .collect(Collectors.toMap(
-                        FieldError::getField,
-                        fieldError -> fieldError.getDefaultMessage() == null ? "Invalid value" : fieldError.getDefaultMessage(),
-                        (first, second) -> first
-                ));
-        return error(HttpStatus.BAD_REQUEST, "Request validation failed", fieldErrors);
-    }
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  ResponseEntity<ApiError> handleConstraintViolation(DataIntegrityViolationException exception) {
+    return error(HttpStatus.CONFLICT, "The request conflicts with an existing account", Map.of());
+  }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    ResponseEntity<ApiError> handleConstraintViolation(DataIntegrityViolationException exception) {
-        return error(HttpStatus.CONFLICT, "The request conflicts with an existing account", Map.of());
-    }
+  
 
-    public record ApiError(
-            Instant timestamp,
-            int status,
-            String error,
-            String message,
-            Map<String, String> fieldErrors
-    ) {
-    }
+  public record ApiError(
+      Instant timestamp,
+      int status,
+      String error,
+      String message,
+      Map<String, String> fieldErrors) {}
 }
