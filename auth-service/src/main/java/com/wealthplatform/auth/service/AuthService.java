@@ -9,11 +9,6 @@ import com.wealthplatform.auth.domain.UserRole;
 import com.wealthplatform.auth.repository.AppUserRepository;
 import com.wealthplatform.auth.repository.RefreshTokenRepository;
 import com.wealthplatform.auth.security.JwtService;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -24,6 +19,10 @@ import java.util.Base64;
 import java.util.HexFormat;
 import java.util.Locale;
 import java.util.UUID;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
@@ -51,18 +50,20 @@ public class AuthService {
   }
 
   private static String normalizeEmail(String email) {
-        return email.trim().toLowerCase(Locale.ROOT);
-    }
+    return email.trim().toLowerCase(Locale.ROOT);
+  }
 
-    private static String hash(String token) {
-        try {
-            byte[] digest = MessageDigest.getInstance("SHA-256")
-                    .digest(token.getBytes(StandardCharsets.UTF_8));
-            return HexFormat.of().formatHex(digest);
-        } catch (NoSuchAlgorithmException exception) {
-            throw new IllegalStateException("SHA-256 is unavailable", exception);
-        }
-    }@Transactional
+  private static String hash(String token) {
+    try {
+      byte[] digest =
+          MessageDigest.getInstance("SHA-256").digest(token.getBytes(StandardCharsets.UTF_8));
+      return HexFormat.of().formatHex(digest);
+    } catch (NoSuchAlgorithmException exception) {
+      throw new IllegalStateException("SHA-256 is unavailable", exception);
+    }
+  }
+
+  @Transactional
   public AuthResponses.Tokens register(AuthRequests.Register request) {
     String email = normalizeEmail(request.email());
     if (userRepository.existsByEmail(email)) {
@@ -131,6 +132,4 @@ public class AuthService {
     return new AuthResponses.Tokens(
         "Bearer", accessToken.value(), accessToken.expiresAt(), rawRefreshToken, refreshExpiresAt);
   }
-
-  
 }

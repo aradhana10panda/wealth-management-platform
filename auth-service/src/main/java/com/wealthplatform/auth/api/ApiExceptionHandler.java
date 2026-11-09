@@ -1,6 +1,9 @@
 package com.wealthplatform.auth.api;
 
 import com.wealthplatform.auth.service.AuthException;
+import java.time.Instant;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,25 +12,17 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.Instant;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 @RestControllerAdvice
 public class ApiExceptionHandler {
   private static ResponseEntity<ApiError> error(
-            HttpStatus status,
-            String message,
-            Map<String, String> fieldErrors
-    ) {
-        return ResponseEntity.status(status).body(new ApiError(
-                Instant.now(),
-                status.value(),
-                status.getReasonPhrase(),
-                message,
-                fieldErrors
-        ));
-    }@ExceptionHandler(AuthException.class)
+      HttpStatus status, String message, Map<String, String> fieldErrors) {
+    return ResponseEntity.status(status)
+        .body(
+            new ApiError(
+                Instant.now(), status.value(), status.getReasonPhrase(), message, fieldErrors));
+  }
+
+  @ExceptionHandler(AuthException.class)
   ResponseEntity<ApiError> handleAuthException(AuthException exception) {
     return error(exception.getStatus(), exception.getMessage(), Map.of());
   }
@@ -51,8 +46,6 @@ public class ApiExceptionHandler {
   ResponseEntity<ApiError> handleConstraintViolation(DataIntegrityViolationException exception) {
     return error(HttpStatus.CONFLICT, "The request conflicts with an existing account", Map.of());
   }
-
-  
 
   public record ApiError(
       Instant timestamp,
